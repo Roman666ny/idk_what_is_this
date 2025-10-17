@@ -10,17 +10,20 @@
 ### Код на C++
 ```cpp
 void selectionSort(vector<int>& arr) {
-    int n = arr.size();
+    int n = arr.size();  // Получаем размер массива
     
+    // Проходим по всем элементам массива, кроме последнего
     for (int i = 0; i < n - 1; i++) {
-        int minIndex = i;
+        int minIndex = i;  // Предполагаем, что минимальный элемент на позиции i
         
+        // Ищем минимальный элемент в неотсортированной части
         for (int j = i + 1; j < n; j++) {
             if (arr[j] < arr[minIndex]) {
-                minIndex = j;
+                minIndex = j;  // Обновляем индекс минимального элемента
             }
         }
         
+        // Меняем местами найденный минимальный элемент с первым неотсортированным
         swap(arr[i], arr[minIndex]);
     }
 }
@@ -50,11 +53,15 @@ void selectionSort(vector<int>& arr) {
 ### Код на C++
 ```cpp
 void bubbleSort(vector<int>& arr) {
-    int n = arr.size();
+    int n = arr.size();  // Получаем размер массива
     
+    // Проходим по массиву n-1 раз
     for (int i = 0; i < n - 1; i++) {
+        // Последние i элементов уже отсортированы
         for (int j = 0; j < n - i - 1; j++) {
+            // Сравниваем соседние элементы
             if (arr[j] > arr[j + 1]) {
+                // Меняем местами, если они в неправильном порядке
                 swap(arr[j], arr[j + 1]);
             }
         }
@@ -86,16 +93,19 @@ void bubbleSort(vector<int>& arr) {
 ### Код на C++
 ```cpp
 void insertionSort(vector<int>& arr) {
-    int n = arr.size();
+    int n = arr.size();  // Получаем размер массива
     
+    // Начинаем со второго элемента (индекс 1)
     for (int i = 1; i < n; i++) {
-        int key = arr[i];
-        int j = i - 1;
+        int key = arr[i];  // Текущий элемент для вставки
+        int j = i - 1;     // Индекс предыдущего элемента
         
+        // Сдвигаем элементы большие key вправо
         while (j >= 0 && arr[j] > key) {
-            arr[j + 1] = arr[j];
-            j--;
+            arr[j + 1] = arr[j];  // Сдвигаем элемент вправо
+            j--;                  // Переходим к следующему элементу слева
         }
+        // Вставляем key в правильную позицию
         arr[j + 1] = key;
     }
 }
@@ -124,32 +134,41 @@ void insertionSort(vector<int>& arr) {
 
 ### Код на C++
 ```cpp
+// Функция для слияния двух отсортированных подмассивов
 void merge(vector<int>& arr, int left, int mid, int right) {
-    vector<int> temp(right - left + 1);
-    int i = left, j = mid + 1, k = 0;
+    vector<int> temp(right - left + 1);  // Временный массив для хранения результата
+    int i = left;      // Индекс для левого подмассива
+    int j = mid + 1;   // Индекс для правого подмассива
+    int k = 0;         // Индекс для временного массива
     
+    // Сливаем подмассивы, пока в обоих есть элементы
     while (i <= mid && j <= right) {
         if (arr[i] <= arr[j]) {
-            temp[k++] = arr[i++];
+            temp[k++] = arr[i++];  // Берем элемент из левого подмассива
         } else {
-            temp[k++] = arr[j++];
+            temp[k++] = arr[j++];  // Берем элемент из правого подмассива
         }
     }
     
+    // Копируем оставшиеся элементы из левого подмассива
     while (i <= mid) temp[k++] = arr[i++];
+    
+    // Копируем оставшиеся элементы из правого подмассива
     while (j <= right) temp[k++] = arr[j++];
     
+    // Копируем отсортированные элементы обратно в исходный массив
     for (int p = 0; p < k; p++) {
         arr[left + p] = temp[p];
     }
 }
 
+// Основная функция сортировки слиянием
 void mergeSort(vector<int>& arr, int left, int right) {
-    if (left < right) {
-        int mid = left + (right - left) / 2;
-        mergeSort(arr, left, mid);
-        mergeSort(arr, mid + 1, right);
-        merge(arr, left, mid, right);
+    if (left < right) {  // Базовый случай рекурсии
+        int mid = left + (right - left) / 2;  // Находим середину
+        mergeSort(arr, left, mid);      // Сортируем левую половину
+        mergeSort(arr, mid + 1, right); // Сортируем правую половину
+        merge(arr, left, mid, right);   // Сливаем отсортированные половины
     }
 }
 ```
@@ -181,17 +200,20 @@ void mergeSort(vector<int>& arr, int left, int right) {
 ### Код на C++
 ```cpp
 void shellSort(vector<int>& arr) {
-    int n = arr.size();
+    int n = arr.size();  // Получаем размер массива
     
+    // Начинаем с большого gap и уменьшаем его
     for (int gap = n / 2; gap > 0; gap /= 2) {
+        // Выполняем сортировку вставками для этого gap
         for (int i = gap; i < n; i++) {
-            int temp = arr[i];
+            int temp = arr[i];  // Сохраняем текущий элемент
             int j;
             
+            // Сдвигаем элементы, пока не найдем правильную позицию для temp
             for (j = i; j >= gap && arr[j - gap] > temp; j -= gap) {
-                arr[j] = arr[j - gap];
+                arr[j] = arr[j - gap];  // Сдвигаем элемент на gap позиций
             }
-            arr[j] = temp;
+            arr[j] = temp;  // Вставляем temp в правильную позицию
         }
     }
 }
@@ -218,23 +240,31 @@ Gap = 1: [10, 14, 19, 27, 33, 35, 42, 44]
 
 ### Код на C++
 ```cpp
+// Функция для разделения массива относительно опорного элемента
 int partition(vector<int>& arr, int low, int high) {
-    int pivot = arr[high];
-    int i = low - 1;
+    int pivot = arr[high];  // Выбираем последний элемент как опорный
+    int i = low - 1;        // Индекс меньшего элемента
     
+    // Проходим по всем элементам
     for (int j = low; j < high; j++) {
+        // Если текущий элемент меньше или равен опорному
         if (arr[j] <= pivot) {
-            i++;
-            swap(arr[i], arr[j]);
+            i++;  // Увеличиваем индекс меньшего элемента
+            swap(arr[i], arr[j]);  // Меняем местами
         }
     }
+    // Ставим опорный элемент в правильную позицию
     swap(arr[i + 1], arr[high]);
-    return i + 1;
+    return i + 1;  // Возвращаем индекс опорного элемента
 }
 
+// Основная функция быстрой сортировки
 void quickSort(vector<int>& arr, int low, int high) {
-    if (low < high) {
+    if (low < high) {  // Базовый случай рекурсии
+        // pi - индекс разделения, arr[pi] на своем месте
         int pi = partition(arr, low, high);
+        
+        // Рекурсивно сортируем элементы до и после разделения
         quickSort(arr, low, pi - 1);
         quickSort(arr, pi + 1, high);
     }
@@ -266,31 +296,41 @@ void quickSort(vector<int>& arr, int low, int high) {
 
 ### Код на C++
 ```cpp
+// Функция для преобразования поддерева в кучу
 void heapify(vector<int>& arr, int n, int i) {
-    int largest = i;
-    int left = 2 * i + 1;
-    int right = 2 * i + 2;
+    int largest = i;        // Инициализируем наибольший как корень
+    int left = 2 * i + 1;   // Левый потомок
+    int right = 2 * i + 2;  // Правый потомок
     
+    // Если левый потомок больше корня
     if (left < n && arr[left] > arr[largest])
         largest = left;
     
+    // Если правый потомок больше наибольшего
     if (right < n && arr[right] > arr[largest])
         largest = right;
     
+    // Если наибольший не корень
     if (largest != i) {
-        swap(arr[i], arr[largest]);
-        heapify(arr, n, largest);
+        swap(arr[i], arr[largest]);  // Меняем местами
+        heapify(arr, n, largest);    // Рекурсивно преобразуем затронутое поддерево
     }
 }
 
+// Основная функция пирамидальной сортировки
 void heapSort(vector<int>& arr) {
     int n = arr.size();
     
+    // Построение кучи (перегруппируем массив)
     for (int i = n / 2 - 1; i >= 0; i--)
         heapify(arr, n, i);
     
+    // Один за другим извлекаем элементы из кучи
     for (int i = n - 1; i > 0; i--) {
+        // Перемещаем текущий корень в конец
         swap(arr[0], arr[i]);
+        
+        // Вызываем heapify на уменьшенной куче
         heapify(arr, i, 0);
     }
 }
@@ -320,12 +360,14 @@ void heapSort(vector<int>& arr) {
 ### Код на C++
 ```cpp
 int linearSearch(const vector<int>& arr, int target) {
+    // Проходим по всем элементам массива
     for (int i = 0; i < arr.size(); i++) {
+        // Если нашли целевой элемент, возвращаем его индекс
         if (arr[i] == target) {
             return i;
         }
     }
-    return -1;
+    return -1;  // Элемент не найден
 }
 ```
 
@@ -354,21 +396,22 @@ int linearSearch(const vector<int>& arr, int target) {
 ### Код на C++
 ```cpp
 int binarySearch(const vector<int>& arr, int target) {
-    int left = 0;
-    int right = arr.size() - 1;
+    int left = 0;                   // Левая граница поиска
+    int right = arr.size() - 1;     // Правая граница поиска
     
+    // Пока границы не пересеклись
     while (left <= right) {
-        int mid = left + (right - left) / 2;
+        int mid = left + (right - left) / 2;  // Находим середину (без переполнения)
         
         if (arr[mid] == target) {
-            return mid;
+            return mid;              // Элемент найден
         } else if (arr[mid] < target) {
-            left = mid + 1;
+            left = mid + 1;          // Ищем в правой половине
         } else {
-            right = mid - 1;
+            right = mid - 1;         // Ищем в левой половине
         }
     }
-    return -1;
+    return -1;  // Элемент не найден
 }
 ```
 
@@ -396,26 +439,29 @@ int binarySearch(const vector<int>& arr, int target) {
 ### Код на C++
 ```cpp
 int interpolationSearch(const vector<int>& arr, int target) {
-    int low = 0;
-    int high = arr.size() - 1;
+    int low = 0;                    // Нижняя граница
+    int high = arr.size() - 1;      // Верхняя граница
     
+    // Пока границы валидны и target в пределах массива
     while (low <= high && target >= arr[low] && target <= arr[high]) {
+        // Если остался один элемент
         if (low == high) {
             if (arr[low] == target) return low;
             return -1;
         }
         
+        // Вычисляем позицию с использованием интерполяции
         int pos = low + (((double)(high - low) / 
                   (arr[high] - arr[low])) * (target - arr[low]));
         
         if (arr[pos] == target)
-            return pos;
+            return pos;              // Элемент найден
         else if (arr[pos] < target)
-            low = pos + 1;
+            low = pos + 1;           // Ищем в правой части
         else
-            high = pos - 1;
+            high = pos - 1;          // Ищем в левой части
     }
-    return -1;
+    return -1;  // Элемент не найден
 }
 ```
 
@@ -442,41 +488,48 @@ arr[5] = 60 == 60
 ### Код на C++
 ```cpp
 int fibonacciSearch(const vector<int>& arr, int target) {
-    int n = arr.size();
+    int n = arr.size();  // Размер массива
     
+    // Инициализируем числа Фибоначчи
     int fibM2 = 0; // F(m-2)
     int fibM1 = 1; // F(m-1)
     int fibM = fibM2 + fibM1; // F(m)
     
+    // Находим наименьшее число Фибоначчи, большее или равное n
     while (fibM < n) {
         fibM2 = fibM1;
         fibM1 = fibM;
         fibM = fibM2 + fibM1;
     }
     
-    int offset = -1;
+    int offset = -1;  // Смещение
     
+    // Пока есть элементы для проверки
     while (fibM > 1) {
+        // Проверяем элемент на позиции i
         int i = min(offset + fibM2, n - 1);
         
         if (arr[i] < target) {
+            // Сдвигаемся вправо
             fibM = fibM1;
             fibM1 = fibM2;
             fibM2 = fibM - fibM1;
             offset = i;
         } else if (arr[i] > target) {
+            // Сдвигаемся влево
             fibM = fibM2;
             fibM1 = fibM1 - fibM2;
             fibM2 = fibM - fibM1;
         } else {
-            return i;
+            return i;  // Элемент найден
         }
     }
     
+    // Проверяем последний элемент
     if (fibM1 && offset + 1 < n && arr[offset + 1] == target)
         return offset + 1;
     
-    return -1;
+    return -1;  // Элемент не найден
 }
 ```
 
